@@ -52,7 +52,7 @@ RUN /opt/conda/bin/conda install -y anaconda::nodejs=20.17 \
   && /opt/conda/bin/conda clean --all -f -y
 
 RUN apt-get -y update \
-  && apt install -y curl procps gcc g++ \
+  && apt install -y curl procps gcc g++
 
 # Final stage
 FROM deps AS final
