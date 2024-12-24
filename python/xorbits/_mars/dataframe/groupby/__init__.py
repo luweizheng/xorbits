@@ -15,6 +15,7 @@
 
 # noinspection PyUnresolvedReferences
 from ..core import DataFrameGroupBy, GroupBy, SeriesGroupBy
+from .len import groupby_len
 
 
 def _install():
@@ -63,7 +64,7 @@ def _install():
         setattr(cls, "kurtosis", lambda groupby, **kw: agg(groupby, "kurtosis", **kw))
         setattr(cls, "sem", lambda groupby, **kw: agg(groupby, "sem", **kw))
         setattr(cls, "nunique", lambda groupby, **kw: agg(groupby, "nunique", **kw))
-
+        setattr(cls, "__len__", groupby_len)
         setattr(cls, "apply", groupby_apply)
         setattr(cls, "transform", groupby_transform)
 

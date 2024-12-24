@@ -1978,3 +1978,39 @@ def test_groupby_nth(setup, chunk_size, dropna):
         r.execute().fetch().sort_index(),
         df2.groupby("b")[["a", "c"]].nth(0, dropna=dropna),
     )
+
+
+def test_groupby_len(setup):
+    np.random.seed(42)
+    num_dataframes = 10
+    for i in range(num_dataframes):
+        # dataframe
+        data = {
+            "Category": np.random.choice(["A", "B", "C"], size=100),
+            "Value": np.random.randint(1, 100, size=100),
+        }
+
+        # DataFrame test
+        df_test = pd.DataFrame(data)
+        df_splitted = md.DataFrame(df_test, chunk_size=35)
+
+        grouped_test = df_test.groupby(
+            "Category"
+        )  # this is the original pandas version.
+        grouped_splitted = df_splitted.groupby("Category")
+        grouped_test2 = df_test.groupby("Value")
+        grouped_splitted2 = df_splitted.groupby("Value")
+
+        assert grouped_splitted.__len__().execute().fetch() == len(grouped_test)
+        assert grouped_splitted2.__len__().execute().fetch() == len(grouped_test2)
+
+        # Series Groupby test:
+        data2 = np.random.choice(["A", "B", "C"], size=100)
+
+        series = md.Series(data2, chunk_size=35)
+        series_test = pd.Series(data2)
+
+        grouped_s = series.groupby(series)
+        grouped_s_test = series_test.groupby(series_test)
+
+        assert grouped_s.__len__().execute().fetch() == len(grouped_s_test)
